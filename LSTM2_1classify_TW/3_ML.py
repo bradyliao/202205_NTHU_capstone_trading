@@ -23,7 +23,7 @@ csv_file_name = date_product_ + '2processed.csv'
 dataset_in = pd.read_csv(csv_file_name)
 
 # testing (very few data)
-dataset_in = dataset_in[:][:500]
+# dataset_in = dataset_in[:][:500]
 
 
 # for reference
@@ -59,7 +59,7 @@ y_Encoder.fit(label_in_order)
 
 scaled_y =  y_Encoder.transform(raw_y) 
 # scaled_y -> numpy.ndarray     [ [1. 0.] , [0. 1.], ... ]
-#                             flat_or_down, up
+#                            flat_or_down , up
 
 print("scaled_x.shape: ", scaled_x.shape)
 print("scaled_y.shape: ", scaled_y.shape)
@@ -86,6 +86,7 @@ print("packed_y.shape: ", packed_y.shape)
 reduced_x = []
 reduced_y = []
 i = 0
+expand_portation = 1
 while i < len(packed_y):
     j = i
     if (   np.array_equal(  packed_y[i]  ,  y_Encoder.transform([['up']]) [0]  )   ):
@@ -93,7 +94,7 @@ while i < len(packed_y):
             j += 1
             if (   np.array_equal(  packed_y[j]  ,  y_Encoder.transform([['flat_or_down']]) [0]  )   ):
                 break
-        expansion = int ((j - i) / 2 )
+        expansion = int ((j - i) * expand_portation )
         
         if i-expansion > 0   and   j+expansion < len(packed_y):
             for k in range(i-expansion, j+expansion):
@@ -155,7 +156,7 @@ print("test_y.shape: ", test_y.shape)
 
 
 
-# setup model
+# setup model ---------------------------------------------------------------------------
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -195,9 +196,9 @@ model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = [
 
 
 
-# checkpoint / callbacks set up
+# checkpoint / callbacks set up ---------------------------------------------------------------------------
 from keras.callbacks import ModelCheckpoint
-filepath="weights.best.hdf5"
+filepath="model_weights_best.h5"
 checkpoint = ModelCheckpoint(
     filepath, monitor = 'val_loss', 
     mode = 'min', # {'auto', 'min', 'max'}
@@ -208,24 +209,24 @@ callbacks_list = [checkpoint]
 
 
 
-# run model
+# run model (train) ---------------------------------------------------------------------------
 validation_split_portion = 0.1
-num_of_epochs = 60
+num_of_epochs = 40
 num_of_batch_size = 256
 
 history = model.fit(train_x, train_y, validation_split = validation_split_portion, shuffle = False, epochs = num_of_epochs, batch_size = num_of_batch_size, callbacks = callbacks_list)
 
 
 
-
+# save model ---------------------------------------------------------------------------
 # load best model
-model.load_weights("weights.best.hdf5")
+model.load_weights("model_weights_best.h5")
 results = model.evaluate(test_x, test_y)
 
 # save the whole model
-model.save("model_whole")
+model.save("model_whole.h5")
 
-# predict
+# test model ---------------------------------------------------------------------------
 predicted_y = model.predict(test_x)
 
 # convert back to original label
@@ -233,25 +234,13 @@ predicted_y = y_Encoder.inverse_transform( predicted_y )
 test_y = y_Encoder.inverse_transform( test_y )
 # predicted_y, test_y ->      [ ['flat_or_down'] , ['up'], ... ]
 
-
-
+# output result
 from sklearn import metrics
 confusion_matrix = metrics.confusion_matrix(y_true=test_y, y_pred=predicted_y, labels = [ 'flat_or_down', 'up' ])
 cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [ 'flat_or_down', 'up' ])
 import matplotlib.pyplot as plt
 cm_display.plot()
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
 
 
 

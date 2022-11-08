@@ -1,7 +1,7 @@
 import pandas as pd
 import talib
 
-date_product_ = '20220530_TXFF2_'
+date_product_ = '20220531_TXFF2_'
 
 csv_file_name = date_product_ + '1extracted.csv'
 data_in = pd.read_csv(csv_file_name)
@@ -79,8 +79,7 @@ output_df.columns = ['3th_buy_qty', '3th_buy_price', '2th_buy_qty', '2th_buy_pri
 # talib
 temp_macd, temp_macdsignal, output_df['1th_buy_price_MACDhist'] = talib.MACD(output_df['1th_buy_price'], fastperiod=12, slowperiod=26, signalperiod=9)
 temp_macd, temp_macdsignal, output_df['1th_sell_price_MACDhist'] = talib.MACD(output_df['1th_sell_price'], fastperiod=12, slowperiod=26, signalperiod=9)
-output_df.drop(index = output_df.index[:33])
-
+output_df = output_df.dropna()
 
 
 output_df.to_csv( date_product_ + '2processed.csv')#, index=False)
