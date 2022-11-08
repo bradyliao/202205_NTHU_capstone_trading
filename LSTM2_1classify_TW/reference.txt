@@ -1,0 +1,6 @@
+
+https://stackoverflow.com/questions/56227671/how-can-i-one-hot-encode-a-list-of-strings-with-keras
+
+https://towardsdatascience.com/17-rules-of-thumb-for-building-a-neural-network-93356f9930af
+
+confusion matrix

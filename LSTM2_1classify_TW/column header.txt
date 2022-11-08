@@ -1,0 +1,32 @@
+info_time, channel_id, channel_seq, product_id, msg_type, 
+
+best_buy_qty_trend, best_buy_price_trend, best_buy_qty, best_buy_price, 
+
+5th_buy_qty_trend, 5th_buy_price_trend, 5th_buy_qty, 5th_buy_price, 
+4th_buy_qty_trend, 4th_buy_price_trend, 4th_buy_qty, 4th_buy_price, 
+3th_buy_qty_trend, 3th_buy_price_trend, 3th_buy_qty, 3th_buy_price, 
+2th_buy_qty_trend, 2th_buy_price_trend, 2th_buy_qty, 2th_buy_price, 
+1th_buy_qty_trend, 1th_buy_price_trend, 1th_buy_qty, 1th_buy_price, 
+1th_sell_price, 1th_sell_qty, 1th_sell_price_trend, 1th_sell_qty_trend, 
+2th_sell_price, 2th_sell_qty, 2th_sell_price_trend, 2th_sell_qty_trend, 
+3th_sell_price, 3th_sell_qty, 3th_sell_price_trend, 3th_sell_qty_trend, 
+4th_sell_price, 4th_sell_qty, 4th_sell_price_trend, 4th_sell_qty_trend, 
+5th_sell_price, 5th_sell_qty, 5th_sell_price_trend, 5th_sell_qty_trend, 
+
+best_sell_price, best_sell_qty, best_sell_price_trend, best_sell_qty_trend
+
+
+
+
+
+
+
+
+time_diff,
+ 3th_buy_qty, 3th_buy_price, 
+2th_buy_qty, 2th_buy_price, 
+1th_buy_qty, 1th_buy_price, 
+
+1th_sell_price, 1th_sell_qty
+2th_sell_price, 2th_sell_qty
+3th_sell_price, 3th_sell_qty
