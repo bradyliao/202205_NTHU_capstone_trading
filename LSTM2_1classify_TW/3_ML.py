@@ -35,7 +35,7 @@ features = [ '3th_buy_qty', '3th_buy_price', '2th_buy_qty', '2th_buy_price', '1t
 targets = ['future_buy_to_now_sell_trend']
 
 
-# extract features
+# extract features ---------------------------------------------------------------------------
 raw_x = dataset_in[features]
 # extract targets
 raw_y = dataset_in[targets]
@@ -44,47 +44,29 @@ print("raw_x.shape: ", raw_x.shape)
 print("raw_y.shape: ", raw_y.shape)
 
 
-# scale features
+# scale features ---------------------------------------------------------------------------
 from sklearn.preprocessing import MinMaxScaler
 scaler_x = MinMaxScaler(feature_range=(0, 1)).fit(raw_x)
 
 scaled_x = scaler_x.transform(raw_x)
 # scaled_x -> numpy.ndarray
 
-# scale targets
+# scale targets ---------------------------------------------------------------------------
 from sklearn.preprocessing import OneHotEncoder
 label_in_order = [ ['flat_or_down'], ['up'] ]
 y_Encoder =  OneHotEncoder(sparse=False)
 y_Encoder.fit(label_in_order)
 
 scaled_y =  y_Encoder.transform(raw_y) 
-# scaled_y -> numpy.ndarray     [ [1. 0.] , [0. 1.] ]
+# scaled_y -> numpy.ndarray     [ [1. 0.] , [0. 1.], ... ]
 #                             flat_or_down, up
 
 print("scaled_x.shape: ", scaled_x.shape)
 print("scaled_y.shape: ", scaled_y.shape)
 
 
-# print("-----------")
-# print(scaled_y)
-# print("-----------")
-# print(y_Encoder.inverse_transform([scaled_y[5]]) )
-# print(y_Encoder.inverse_transform([scaled_y[6]]) )
-# print(y_Encoder.inverse_transform([scaled_y[7]]) )
-# print("-----------")
-# print(y_Encoder.transform([ ['flat_or_down'] ]) )
-# print("-----------")
-# print(y_Encoder.transform([ ['up'] ]) )
-# print("-----------")
-# print(scaled_y[0])
-# print(  y_Encoder.transform( [ ['flat_or_down'] ] )[0]  )
-# print( np.array_equal(scaled_y[6], y_Encoder.transform( [ ['flat_or_down'] ] )[0] )  )
-# print("-----------")
-# import sys
-# sys.exit(0)
 
-
-# pack data
+# pack data ---------------------------------------------------------------------------
 lookback = 30
 packed_x = []
 packed_y = []
@@ -100,6 +82,7 @@ print("packed_y.shape: ", packed_y.shape)
 
 
 
+# reduce data ---------------------------------------------------------------------------
 reduced_x = []
 reduced_y = []
 i = 0
@@ -136,25 +119,24 @@ for i in range(0, len(reduced_y)):
         count_up += 1
     else:
         count_flat_or_down += 1
-
 print("up:", count_up)
 print("flat_or_down:", count_flat_or_down)
 
 
 
-# split training / testing
+# split training / testing ---------------------------------------------------------------------------
 test_size_portion = 0.1
 from sklearn.model_selection import train_test_split
 train_x, test_x, train_y, test_y = train_test_split(reduced_x, reduced_y, test_size = test_size_portion, shuffle = False)
 
-# convert to numpy array
+# convert to numpy array --------------------------------------------------------------------------- (may not need)
 train_x, train_y, test_x, test_y = np.array(train_x), np.array(train_y), np.array(test_x), np.array(test_y)   # 轉成numpy array的格式，以利輸入 RNN
 print("train_x.shape: ", train_x.shape)
 print("train_y.shape: ", train_y.shape)
 print("test_x.shape: ", test_x.shape)
 print("test_y.shape: ", test_y.shape)
 
-# reshape data X to 3-dimension for model
+# reshape data X to 3-dimension for model ---------------------------------------------------------------------------
 assert len(features) == train_x.shape[2]
 train_x = np.reshape( train_x, ( train_x.shape[0], train_x.shape[1], train_x.shape[2] ) )
 
@@ -249,6 +231,7 @@ predicted_y = model.predict(test_x)
 # convert back to original label
 predicted_y = y_Encoder.inverse_transform( predicted_y )
 test_y = y_Encoder.inverse_transform( test_y )
+# predicted_y, test_y ->      [ ['flat_or_down'] , ['up'], ... ]
 
 
 
